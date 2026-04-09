@@ -4,9 +4,9 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "list_functions.h"
-#include "dump_functions.h"
-#include "set_get_functions.h"
+#include "../include/list_functions.h"
+#include "../include/dump_functions.h"
+#include "../include/set_get_functions.h"
 
 const char* log_file_name = "";
 FILE* log_file = NULL;
@@ -16,10 +16,10 @@ static char* GetNewDotCmd(int file_counter)
     char str_command[100] = "";
 
     snprintf(str_command, sizeof(str_command),
-            "dot -Tpng image%d.txt -o image%d.png",
+            "dot -Tpng ../img/image%d.txt -o ../img/image%d.png",
              file_counter, file_counter);
 
-    return strdup(str_command);     // ����� ��� strdup by VB
+    return strdup(str_command);
 }
 
 static char* GetNewImageFileName(int file_counter)
@@ -27,7 +27,7 @@ static char* GetNewImageFileName(int file_counter)
     char str_file_counter[100] = "";
 
     snprintf(str_file_counter, sizeof(str_file_counter),
-             "image%d.txt", file_counter);
+             "../img/image%d.txt", file_counter);
 
     return strdup(str_file_counter);
 }
@@ -36,7 +36,6 @@ enum ReturnStatus ListVerifier(struct StructList* list)
 {
     assert(list != NULL);
 
-    //������ ����
     if (GetTail(list) == GetHead(list) && GetHead(list) == 0)
         return success;
 
@@ -94,17 +93,11 @@ enum ReturnStatus ListVerifier(struct StructList* list)
             SetErrCode(list, GetErrCode(list) | list_prev_err);
 
         }
-
-        // �������� �������������
-
         if (   GetDataEl(list, i) != PZN
             && (GetNextEl(list, GetPrevEl(list, i)) != i
              || GetPrevEl(list, GetNextEl(list, i)) != i)) {
 
-            //printf("H3 INDEX: %d\n", i);
             SetErrCode(list, GetErrCode(list) | list_loop_err);
-
-
         }
     }
 
@@ -116,8 +109,6 @@ enum ReturnStatus ListVerifier(struct StructList* list)
     for (int i = GetHead(list); i != 0 && count_el <= GetNumOfEl(list) + 1;
                                                     i = GetNextEl(list, i))
         count_el++;
-
-    //printf("COUNTER: %d\n", count_el);
 
     if (GetNumOfEl(list) != count_el) {
 
@@ -215,15 +206,9 @@ enum ReturnStatus ListDump(struct StructList* list,
                           "ranksep = 1.0\n"
                           "nodesep = 0.5\n");
 
-    //�������� ������
-
     CreateNodes(graphiz_file, list);
 
-    //��������� ������
-
     SetNodesRanks(graphiz_file, list);
-
-    //�������� �����
 
     CreateEdges(graphiz_file, list);
 
@@ -278,9 +263,9 @@ void FillLogFile(char* image_file_name, struct StructList* list, int file_counte
         fprintf(log_file, "|%3d| ", GetPrevEl(list, i));
     }
 
-    fprintf(log_file, "\n\n<img src=image%d.png width=%dpx>\n\n",
-                                                    file_counter,
-                                                    GetCapacity(list) * 200);
+    fprintf(log_file, "\n\n<img src=../img/image%d.png width=%dpx>\n\n",
+                                                           file_counter,
+                                                           GetCapacity(list) * 200);
 
     fprintf(log_file, "-------------------------------------------------------\n\n");
 
@@ -337,8 +322,6 @@ void CreateNodes(FILE* graphiz_file, struct StructList* list)
 
     const char* color = NULL;
 
-    //�������� ������
-
     for (int i = 0; i < GetCapacity(list); i++) {
 
         if (i == 0)
@@ -356,9 +339,7 @@ void CreateNodes(FILE* graphiz_file, struct StructList* list)
 
             color = "#B2A4F0";
 
-        else
-
-            color = "#87CEEB";
+        else color = "#87CEEB";
 
         PrintNode(graphiz_file, i, color, GetDataEl(list, i),
                                           GetNextEl(list, i),
@@ -411,8 +392,6 @@ void CreateEdges(FILE* graphiz_file, struct StructList* list)
 
     for (int i = 0; i < GetCapacity(list); i++) {
 
-        // ������� �������
-
         if (IsIndexFree(list, i)) {
 
             PrintEdge(graphiz_file, i, GetNextEl(list, i), "black", true);
@@ -423,9 +402,6 @@ void CreateEdges(FILE* graphiz_file, struct StructList* list)
 
         if (GetDataEl(list, i) == PZN && GetPrevEl(list, i) != -1)
             PrintErrorNode(graphiz_file, GetDataEl(list, i), "#FF0000", "PZN_ERR", i);
-
-
-        //���� ������ ��������
 
         if (   IsPrevIndexCorrect(list, i)
             && IsNextIndexCorrect(list, i)) {
@@ -446,8 +422,6 @@ void CreateEdges(FILE* graphiz_file, struct StructList* list)
             continue;
 
         }
-
-        //���� ������ �� ��������
 
         if (!IsNextIndexCorrect(list, i))
 

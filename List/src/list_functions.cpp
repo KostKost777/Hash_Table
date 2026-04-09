@@ -4,9 +4,9 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "list_functions.h"
-#include "dump_functions.h"
-#include "set_get_functions.h"
+#include "../include/list_functions.h"
+#include "../include/dump_functions.h"
+#include "../include/set_get_functions.h"
 
 static void SetDefaultNext(struct StructList* list)
 {
@@ -341,7 +341,7 @@ void CloseLogFile()
 
 enum ReturnStatus OpenLogFile()
 {
-    log_file_name = "list_logs.html";
+    log_file_name = "../html/list_logs.html";
 
     log_file = fopen(log_file_name, "w");
 

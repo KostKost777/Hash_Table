@@ -5,9 +5,9 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#include "list_functions.h"
-#include "dump_functions.h"
-#include "set_get_functions.h"
+#include "../include/list_functions.h"
+#include "../include/dump_functions.h"
+#include "../include/set_get_functions.h"
 
 int main()
 {

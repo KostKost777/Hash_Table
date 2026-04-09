@@ -4,9 +4,9 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "list_functions.h"
-#include "dump_functions.h"
-#include "set_get_functions.h"
+#include "../include/list_functions.h"
+#include "../include/dump_functions.h"
+#include "../include/set_get_functions.h"
 
 //  GET
 int GetHead(struct StructList* list)
