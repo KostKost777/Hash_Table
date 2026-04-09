@@ -1,0 +1,100 @@
+#ifndef LIST_FUNC
+#define LIST_FUNC
+
+const int PZN = 228;
+
+const int MAX_CAPACITY = 1E6;
+
+const int CANARY = 999;
+
+enum ReturnStatus
+{
+    success = 0,
+    error = -1,
+    fatal_error = -2,
+};
+
+struct StructList
+{
+    int* data;
+    int* next;
+    int* prev;
+    int free;
+    int capacity;
+    int num_of_el;
+    int err_code;
+};
+
+enum ReturnStatus ListCtor (struct StructList* list, int capacity);
+
+void ListDtor(struct StructList* list);
+
+int UserPrintList(struct StructList* list);
+
+int Insert(struct StructList* list, int index, int value);
+
+int InsertAfter(struct StructList* list,
+                int prev_index, int value,
+                const int LINE, const char* FUNC, const char* FILE);
+
+int InsertBefore(struct StructList* list,
+                 int index, int value,
+                 const int line, const char* func, const char* file);
+
+int InsertBeforeHead(struct StructList* list,
+                     int value,
+                     const int line, const char* func, const char* file);
+
+int InsertAfterTail(struct StructList* list,
+                     int value,
+                     const int line, const char* func, const char* file);
+
+enum ReturnStatus DeleteElement(struct StructList* list,
+                                int del_index,
+                                const int LINE, const char* FUNC, const char* FILE);
+
+enum ReturnStatus OpenLogFile();
+
+enum ReturnStatus UpwardReallocate(struct StructList* list);
+
+enum ReturnStatus DownwardReallocate(struct StructList* list, bool with_linearization);
+
+enum ReturnStatus Linearization(struct StructList* list);
+
+void CloseLogFile();
+
+void SwapNode(struct StructList* list, int ind1, int ind2);
+
+int SortListByNext(struct StructList* list);
+
+#define INSERT_AFTER(list, index, element, label)                        \
+    if ((ret_value = InsertAfter(list, index, element,                          \
+                    __LINE__, __func__, __FILE__)) == -1) {      \
+        goto label;                                                \
+    }
+
+#define INSERT_BEFORE(list, index, element, label)                        \
+    if ((ret_value = InsertBefore(list, index, element,                          \
+                    __LINE__, __func__, __FILE__)) == -1) {      \
+        goto label;                                                \
+    }
+
+#define INSERT_BEFORE_HEAD(list, element, label)                        \
+    if ((ret_value = InsertBeforeHead(list, element,                          \
+                    __LINE__, __func__, __FILE__)) == -1) {      \
+        goto label;                                                \
+    }
+
+#define INSERT_AFTER_TAIL(list, element, label)                        \
+    if ((ret_value = InsertAfterTail(list, element,                          \
+                    __LINE__, __func__, __FILE__)) == -1) {      \
+        goto label;                                                \
+    }
+
+#define DELETE_ELEMENT(list, index, label)                        \
+    if ((ret_value = DeleteElement(list, index,                          \
+                    __LINE__, __func__, __FILE__)) == -1) {      \
+        goto label;                                                \
+    }
+
+#endif
