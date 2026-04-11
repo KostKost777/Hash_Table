@@ -16,7 +16,7 @@ static char* GetNewDotCmd(int file_counter)
     char str_command[100] = "";
 
     snprintf(str_command, sizeof(str_command),
-            "dot -Tpng ../img/image%d.txt -o ../img/image%d.png",
+            "dot -Tpng logs/img/image%d.txt -o logs/img/image%d.png",
              file_counter, file_counter);
 
     return strdup(str_command);
@@ -27,7 +27,7 @@ static char* GetNewImageFileName(int file_counter)
     char str_file_counter[100] = "";
 
     snprintf(str_file_counter, sizeof(str_file_counter),
-             "../img/image%d.txt", file_counter);
+             "logs/img/image%d.txt", file_counter);
 
     return strdup(str_file_counter);
 }
@@ -177,6 +177,7 @@ enum ReturnStatus ListDump(struct StructList* list,
     assert(func != NULL);
     assert(file != NULL);
     assert(message != NULL);
+    assert(log_file);
 
     va_list args = {};
     va_start(args, message);
@@ -198,7 +199,10 @@ enum ReturnStatus ListDump(struct StructList* list,
 
     char* image_file_name = GetNewImageFileName(file_counter);
 
+    //printf("-- %s\n", image_file_name);
+
     FILE* graphiz_file = fopen(image_file_name, "w");
+    assert(graphiz_file);
 
     fprintf(graphiz_file, "digraph {\n"
                           "rankdir = HR;\n"
@@ -263,7 +267,7 @@ void FillLogFile(char* image_file_name, struct StructList* list, int file_counte
         fprintf(log_file, "|%3d| ", GetPrevEl(list, i));
     }
 
-    fprintf(log_file, "\n\n<img src=../img/image%d.png width=%dpx>\n\n",
+    fprintf(log_file, "\n\n<img src=img/image%d.png width=%dpx>\n\n",
                                                            file_counter,
                                                            GetCapacity(list) * 200);
 

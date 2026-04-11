@@ -1,3 +1,6 @@
-/List/build/
-/List/img/
-/List/bin/
+*.png
+*.html
+*.txt
+*.o
+List/bin
+HashTable/bin

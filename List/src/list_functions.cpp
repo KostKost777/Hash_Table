@@ -26,7 +26,7 @@ static void SetDefaultData(struct StructList* list)
     assert(list != NULL);
 
     SetDataEl(list, 0, CANARY);
-
+OpenLogFile();
     for (int i = 1; i < GetCapacity(list); ++i)
         SetDataEl(list, i, PZN);
 
@@ -341,12 +341,14 @@ void CloseLogFile()
 
 enum ReturnStatus OpenLogFile()
 {
-    log_file_name = "../html/list_logs.html";
-
+    log_file_name = "logs/list_logs.html";
     log_file = fopen(log_file_name, "w");
 
     if (log_file == NULL)
+    {
+        printf("Can`t open Logfile\n");
         return error;
+    }
 
     printf("Logfile open success\n");
 
