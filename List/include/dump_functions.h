@@ -19,9 +19,7 @@ enum ErrorCodes
     list_canary_err =      512,
 };
 
-enum ReturnStatus ListDump(struct StructList* list,
-                           const int line, const char* func, const char* file,
-                           const char* message, ...);
+enum ReturnStatus ListDump(struct StructList* list, const char* message, ...);
 
 void PrintError(struct StructList* list);
 
@@ -58,7 +56,7 @@ bool IsIndexFree(struct StructList* list, int index);
 
 #define LIST_VERIFIER(list)                                     \
     if (ListVerifier(list) == error) {                          \
-        ListDump(list, line, func, file, "Verifier work");      \
+        ListDump(list, "Verifier work");      \
         return error;                                           \
     }                                                           \
 

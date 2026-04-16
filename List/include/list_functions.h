@@ -34,24 +34,19 @@ int UserPrintList(struct StructList* list);
 int Insert(struct StructList* list, int index, char* word);
 
 int InsertAfter(struct StructList* list,
-                int prev_index, const char* value,
-                const int line, const char* func, const char* file);
+                int prev_index, const char* value);
 
 int InsertBefore(struct StructList* list,
-                 int index, const char* value,
-                 const int line, const char* func, const char* file);
+                 int index, const char* value);
 
 int InsertBeforeHead(struct StructList* list,
-                     const char* value,
-                     const int line, const char* func, const char* file);
+                     const char* value);
 
 int InsertAfterTail(struct StructList* list,
-                     const char* value,
-                     const int line, const char* func, const char* file);
+                     const char* value);
 
 enum ReturnStatus DeleteElement(struct StructList* list,
-                                int del_index,
-                                const int LINE, const char* FUNC, const char* FILE);
+                                int del_index);
 
 enum ReturnStatus OpenLogFile();
 

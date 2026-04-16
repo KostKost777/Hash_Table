@@ -170,12 +170,9 @@ void PrintError(struct StructList* list)
 }
 
 enum ReturnStatus ListDump(struct StructList* list,
-                           const int line, const char* func, const char* file,
                            const char* message, ...)
 {
     assert(list != NULL);
-    assert(func != NULL);
-    assert(file != NULL);
     assert(message != NULL);
     assert(log_file);
 
@@ -189,8 +186,6 @@ enum ReturnStatus ListDump(struct StructList* list,
 
     if (GetErrCode(list) & list_capacity_err)
         return error;
-
-    fprintf(log_file, "<h4>LIST { %s %s:%d }</h4>", func, file, line);
 
     if (GetErrCode(list) != 0)
         PrintError(list);

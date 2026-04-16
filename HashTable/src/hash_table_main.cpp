@@ -9,20 +9,15 @@
 #include "dump_functions.h"
 #include "set_get_functions.h"
 
+#include "hash_table_funcs.h"
+
 int main (void)
 {
-    atexit(CloseLogFile);
+    struct HashTable table = {};
+    HashTableCtor(&table, 7, AlwaysZeroHashFunc);
 
-    struct StructList list = {};
+    AddElemInHashTable(&table, "HELLO");
+    AddElemInHashTable(&table, "Bebra");
 
-    OpenLogFile();
-
-    ListCtor(&list, 5);
-
-    InsertAfter(&list, 0, 100,  __LINE__, __func__, __FILE__);
-
-    ListDump(&list, __LINE__, __func__, __FILE__, "DUMP");
-
-    ListDtor(&list);
-
+    //HashTableDump(&table, "");
 }
