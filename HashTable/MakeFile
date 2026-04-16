@@ -6,7 +6,9 @@ LIST_OBJECTS = $(LIST_BUILD_DIR)/dump_functions.o \
                $(LIST_BUILD_DIR)/list_set_get_functions.o
 
 SRC_DIR = src
-SOURCES = $(SRC_DIR)/hash_table_main.cpp
+SOURCES = $(SRC_DIR)/hash_table_main.cpp \
+          $(SRC_DIR)/hash_table_funcs.cpp \
+          $(SRC_DIR)/hash_table_dump_funcs.cpp \
 
 BUILD_DIR = build
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
@@ -76,7 +78,9 @@ WARNING_FLAGS = -Wall -Wextra -Weffc++ \
 SANITIZER_FLAGS = -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
 LDFLAGS = $(SANITIZER_FLAGS)
-INCLUDES = -I../List/include
+INCLUDES = -I ../List/include  \
+           -I include  \
+
 CXXFLAGS = $(OPTIMIZATION) $(DEBUG_FLAGS) $(WARNING_FLAGS) $(SANITIZER_FLAGS) $(CXX_STANDARD) $(INCLUDES)
 
 $(TARGET): $(BUILD_DIR) $(OBJECTS) $(LIST_OBJECTS)

@@ -6,6 +6,7 @@
 #include <errno.h>
 
 #include "hash_table_funcs.h"
+#include "hash_table_dump_funcs.h"
 
 void HashTableCtor(HashTable* hash_table, size_t size,
                   size_t (*hash_func)(char* word))
@@ -35,7 +36,11 @@ void HashTableDtor(HashTable* hash_table)
     assert(hash_table);
 
     for (size_t i = 0; i < hash_table->size; ++i)
+    {
         ListDtor(hash_table->table[i]);
+        free(hash_table->table[i]);
+    }
+        
 
     free(hash_table->table);
 }
@@ -69,7 +74,7 @@ size_t LineLenHashFunc(char* word)
     return strlen(word);
 }
 
-size_t SymbolhashHashFunc(char* word)
+size_t SymbolSumHashFunc(char* word)
 {
     assert(word);
     size_t hash = 0;
