@@ -252,7 +252,7 @@ void FillLogFile(char* image_file_name, struct StructList* list, int file_counte
     fprintf(log_file, "\nDATA: ");
 
     for (int i = 0; i < GetCapacity(list); ++i) {
-        fprintf(log_file, "|%3d| ", GetDataEl(list, i));
+        fprintf(log_file, "|%s| ", GetDataEl(list, i));
     }
 
     fprintf(log_file, "\nNEXT: ");
@@ -292,7 +292,7 @@ void PrintBazeNode(FILE* graphiz_file, const char* name, const char* color)
 }
 
 void PrintNode(FILE* graphiz_file, int index, const char* color,
-                    int data, int next, int prev)
+                    const char* data, int next, int prev)
 {
     assert(color != NULL);
     assert(graphiz_file != NULL);
@@ -302,17 +302,9 @@ void PrintNode(FILE* graphiz_file, int index, const char* color,
                           "style = filled; "
                           "fillcolor = \"%s\"; "
                           "color = \"#00000\"; "
-                          "label = \"{INDEX = %d |",
-                           index, color, index);
-
-        if (data == PZN)
-            fprintf(graphiz_file, "DATA = PZN");
-
-        else
-            fprintf(graphiz_file, "DATA = %d", data);
-
-        fprintf(graphiz_file, " | {NEXT = %d | PREV = %d} }\"; ]\n",
-                                          next,       prev);
+                          "label = \"{INDEX = %d |"
+                          "DATA = %s | {NEXT = %d | PREV = %d} }\"; ]\n",
+                           index, color, index, data, next, prev);
 }
 
 void CreateNodes(FILE* graphiz_file, struct StructList* list)
@@ -348,9 +340,7 @@ void CreateNodes(FILE* graphiz_file, struct StructList* list)
         PrintNode(graphiz_file, i, color, GetDataEl(list, i),
                                           GetNextEl(list, i),
                                           GetPrevEl(list, i));
-
     }
-
 }
 
 void SetNodesRanks(FILE* graphiz_file, struct StructList* list)
@@ -404,8 +394,8 @@ void CreateEdges(FILE* graphiz_file, struct StructList* list)
 
         }
 
-        if (GetDataEl(list, i) == PZN && GetPrevEl(list, i) != -1)
-            PrintErrorNode(graphiz_file, GetDataEl(list, i), "#FF0000", "PZN_ERR", i);
+        //if (GetDataEl(list, i) == PZN && GetPrevEl(list, i) != -1)
+        //    PrintErrorNode(graphiz_file, GetDataEl(list, i), "#FF0000", "PZN_ERR", i);
 
         if (   IsPrevIndexCorrect(list, i)
             && IsNextIndexCorrect(list, i)) {

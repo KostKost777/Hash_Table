@@ -23,55 +23,14 @@ int main()
     if (ListCtor(&list, 11))
         goto exit_label;
 
-    INSERT_AFTER(&list, 0, 100, exit_label);
+    INSERT_AFTER(&list, 0, "HELLO", exit_label);
 
-    INSERT_AFTER(&list, 1, 200, exit_label);
+    INSERT_BEFORE_HEAD(&list, "GG", exit_label);
 
-    INSERT_AFTER(&list, 2, 300, exit_label);
-
-    INSERT_AFTER(&list, 2, 250, exit_label);
-
-    INSERT_AFTER(&list, 1, 150, exit_label);
-
-    INSERT_AFTER(&list, 5, 400, exit_label);
-
-    INSERT_AFTER(&list, 2, 160, exit_label);
-
-    INSERT_BEFORE_HEAD(&list, 50, exit_label);
-
-    DELETE_ELEMENT(&list, 4, exit_label);
-
-    DELETE_ELEMENT(&list, 2, exit_label);
-
-    UserPrintList(&list);
+    INSERT_AFTER(&list, 2, "ALLO", exit_label);
 
     ListDump(&list, __LINE__, __func__, __FILE__,
              "<h3>Before linearization</h3>\n");
-
-    Linearization(&list);
-
-    ListDump(&list, __LINE__, __func__, __FILE__,
-             "<h3>After linearization</h3>\n");
-
-    UserPrintList(&list);
-
-    ListDump(&list, __LINE__, __func__, __FILE__,
-             "<h3>Before sort list by next</h3>\n");
-
-    SortListByNext(&list);
-
-    ListDump(&list, __LINE__, __func__, __FILE__,
-             "<h3>After sort list by next</h3>\n");
-
-    UserPrintList(&list);
-
-    ListDump(&list, __LINE__, __func__, __FILE__,
-             "<h3>Before DownwardReallocate</h3>\n");
-
-    DownwardReallocate(&list, false);
-
-    ListDump(&list, __LINE__, __func__, __FILE__,
-             "<h3>After DownwardReallocate</h3>\n");
 
     exit_label:
 

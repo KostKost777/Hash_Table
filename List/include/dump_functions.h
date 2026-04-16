@@ -35,8 +35,8 @@ void CreateEdges(FILE* graphiz_file, struct StructList* list);
 
 void SetNodesRanks(FILE* graphiz_file, struct StructList* list);
 
-void PrintNode(FILE* graphiz_file,
-               int index, const char* color, int data, int next, int prev);
+void PrintNode(FILE* graphiz_file, int index, const char* color,
+                    const char* data, int next, int prev);
 
 void PrintBazeNode(FILE* graphiz_file,
                    const char* name, const char* color);

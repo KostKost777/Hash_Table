@@ -39,7 +39,7 @@ int GetCapacity(struct StructList* list)
     return list->capacity;
 }
 
-int GetDataEl(struct StructList* list, int index)
+const char* GetDataEl(struct StructList* list, int index)
 {
     assert(list);
     return list->data[index];
@@ -96,7 +96,7 @@ void SetCapacity(struct StructList* list, int value)
     list->capacity = value;
 }
 
-void SetDataEl(struct StructList* list, int index, int value)
+void SetDataEl(struct StructList* list, int index, const char* value)
 {
     assert(list);
     list->data[index] = value;

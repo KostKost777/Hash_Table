@@ -1,11 +1,11 @@
 #ifndef LIST_FUNC
 #define LIST_FUNC
 
-const int PZN = 228;
+extern const char* PZN;
 
 const int MAX_CAPACITY = 1E6;
 
-const int CANARY = 999;
+extern const char* CANARY;
 
 enum ReturnStatus
 {
@@ -16,7 +16,7 @@ enum ReturnStatus
 
 struct StructList
 {
-    int* data;
+    const char** data;;
     int* next;
     int* prev;
     int free;
@@ -31,22 +31,22 @@ void ListDtor(struct StructList* list);
 
 int UserPrintList(struct StructList* list);
 
-int Insert(struct StructList* list, int index, int value);
+int Insert(struct StructList* list, int index, char* word);
 
 int InsertAfter(struct StructList* list,
-                int prev_index, int value,
-                const int LINE, const char* FUNC, const char* FILE);
+                int prev_index, const char* value,
+                const int line, const char* func, const char* file);
 
 int InsertBefore(struct StructList* list,
-                 int index, int value,
+                 int index, const char* value,
                  const int line, const char* func, const char* file);
 
 int InsertBeforeHead(struct StructList* list,
-                     int value,
+                     const char* value,
                      const int line, const char* func, const char* file);
 
 int InsertAfterTail(struct StructList* list,
-                     int value,
+                     const char* value,
                      const int line, const char* func, const char* file);
 
 enum ReturnStatus DeleteElement(struct StructList* list,

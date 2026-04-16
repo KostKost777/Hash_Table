@@ -8,6 +8,9 @@
 #include "../include/dump_functions.h"
 #include "../include/set_get_functions.h"
 
+const char* PZN = "PZN";
+const char* CANARY = "CANARY";
+
 static void SetDefaultNext(struct StructList* list)
 {
     assert(list != NULL);
@@ -26,7 +29,7 @@ static void SetDefaultData(struct StructList* list)
     assert(list != NULL);
 
     SetDataEl(list, 0, CANARY);
-OpenLogFile();
+
     for (int i = 1; i < GetCapacity(list); ++i)
         SetDataEl(list, i, PZN);
 
@@ -49,7 +52,7 @@ ReturnStatus ListCtor(struct StructList* list, int capacity)
 
     SetCapacity(list, capacity);
 
-    list->data = (int*)calloc(GetCapacity(list), sizeof(int));
+    list->data = (const char**)calloc(GetCapacity(list), sizeof(const char*));
 
     list->next = (int*)calloc(GetCapacity(list), sizeof(int));
 
@@ -84,7 +87,7 @@ void ListDtor(struct StructList* list)
     list->prev = NULL;
 }
 
-int Insert(struct StructList* list, int index, int value)
+int Insert(struct StructList* list, int index, const char*  value)
 {
     if (   index < 0
         || GetPrevEl(list, index) == -1
@@ -121,7 +124,7 @@ int Insert(struct StructList* list, int index, int value)
 
 
 int InsertAfter(struct StructList* list,
-                int index, int value,
+                int index, const char* value,
                 const int line, const char* func, const char* file)
 {
     assert(list != NULL);
@@ -146,7 +149,7 @@ int InsertAfter(struct StructList* list,
 }
 
 int InsertBefore(struct StructList* list,
-                 int index, int value,
+                 int index, const char* value,
                  const int line, const char* func, const char* file)
 {
     assert(list != NULL);
@@ -171,7 +174,7 @@ int InsertBefore(struct StructList* list,
 }
 
 int InsertBeforeHead(struct StructList* list,
-                     int value,
+                     const char* value,
                      const int line, const char* func, const char* file)
 {
     assert(list != NULL);
@@ -196,7 +199,7 @@ int InsertBeforeHead(struct StructList* list,
 }
 
 int InsertAfterTail(struct StructList* list,
-                     int value,
+                     const char* value,
                      const int line, const char* func, const char* file)
 {
     assert(list != NULL);
@@ -274,7 +277,7 @@ int UserPrintList(struct StructList* list)
     }
 
     for (int i = GetHead(list); i != 0; i = GetNextEl(list, i)) {
-        printf("%d ", GetDataEl(list, i));
+        printf("%s ", GetDataEl(list, i));
     }
     printf("\n");
 
@@ -361,9 +364,9 @@ enum ReturnStatus UpwardReallocate(struct StructList* list)
 {
     assert(list != NULL);
 
-    int* new_data = (int*)realloc(list->data, sizeof(int) * GetCapacity(list) * 2);
-    int* new_next = (int*)realloc(list->next, sizeof(int) * GetCapacity(list) * 2);
-    int* new_prev = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list) * 2);
+    const char** new_data = (const char**)realloc(list->data, sizeof(const char*) * GetCapacity(list) * 2);
+    int* new_next         = (int*)realloc(list->next, sizeof(int) * GetCapacity(list) * 2);
+    int* new_prev         = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list) * 2);
 
     if (new_data == NULL || new_next == NULL || new_prev == NULL) {
         free(new_data);
@@ -444,9 +447,9 @@ enum ReturnStatus DownwardReallocate(struct StructList* list, bool with_lineariz
         SetFree(list, 0);
 
 
-    int* new_data = (int*)realloc(list->data, sizeof(int) * GetCapacity(list));
-    int* new_next = (int*)realloc(list->next, sizeof(int) * GetCapacity(list));
-    int* new_prev = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list));
+    const char** new_data = (const char**)realloc(list->data, sizeof(const char*) * GetCapacity(list));
+    int* new_next         = (int*)realloc(list->next, sizeof(int) * GetCapacity(list));
+    int* new_prev         = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list));
 
     if (new_data == NULL || new_next == NULL || new_prev == NULL) {
 
@@ -510,7 +513,7 @@ void SwapNode(struct StructList* list, int ind1, int ind2)
 {
     assert(list != NULL);
 
-    int twin_data = GetDataEl(list, ind1);
+    char* twin_data = strdup(GetDataEl(list, ind1));
     SetDataEl(list, ind1, GetDataEl(list, ind2));
     SetDataEl(list, ind2, twin_data);
 

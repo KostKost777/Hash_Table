@@ -12,7 +12,7 @@ int GetNumOfEl(struct StructList* list);
 
 int GetCapacity(struct StructList* list);
 
-int GetDataEl(struct StructList* list, int index);
+const char* GetDataEl(struct StructList* list, int index);
 
 int GetPrevEl(struct StructList* list, int index);
 
@@ -32,7 +32,7 @@ void SetNumOfEl(struct StructList* list, int value);
 
 void SetCapacity(struct StructList* list, int value);
 
-void SetDataEl(struct StructList* list, int index, int value);
+void SetDataEl(struct StructList* list, int index, const char* value);
 
 void SetPrevEl(struct StructList* list, int index, int value);
 
