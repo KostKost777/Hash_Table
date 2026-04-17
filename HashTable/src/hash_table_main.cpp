@@ -23,20 +23,24 @@ int main (void)
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 1009, LineLenHashFunc);
+    HashTableCtor(&table, 4001, CRC32_HashFunc);
 
     struct Buffer buffer = {};
 
     FillBufferFromFile(&buffer, "database/database.txt");
-
     FillHashTableFromBuffer(&table, &buffer);
+
+    FILE* output_file = fopen("../Discription/output.txt", "w+");
+    assert(output_file);
+
+    WriteHashTableDistribution(&table, output_file);
 
    // printf("\n%s\n", buffer);
 
     // AddElemInHashTable(&table, "HELLO");
     // AddElemInHashTable(&table, "Bebra");
 
-    HashTableDump(&table, "");
+    //HashTableDump(&table, "");
     HashTableDtor(&table);
     free(buffer.data);
 }
