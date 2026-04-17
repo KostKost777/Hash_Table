@@ -11,6 +11,7 @@
 
 #include "hash_table_funcs.h"
 #include "hash_table_dump_funcs.h"
+#include "parse_db_from_file.h"
 
 int main (void)
 {
@@ -19,11 +20,22 @@ int main (void)
     OpenLogFile();
 
     struct HashTable table = {};
+
     HashTableCtor(&table, 7, AlwaysZeroHashFunc);
 
-    AddElemInHashTable(&table, "HELLO");
-    AddElemInHashTable(&table, "Bebra");
+    struct Buffer buffer = {};
+
+    FillBufferFromFile(&buffer, "database/database.txt");
+
+    FillHashTableFromBuffer(&table, &buffer);
+
+    printf("\n%s\n", buffer);
+
+    // AddElemInHashTable(&table, "HELLO");
+    // AddElemInHashTable(&table, "Bebra");
 
     HashTableDump(&table, "");
     HashTableDtor(&table);
+
+    free(buffer.data);
 }

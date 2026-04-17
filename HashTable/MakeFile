@@ -9,6 +9,7 @@ SRC_DIR = src
 SOURCES = $(SRC_DIR)/hash_table_main.cpp \
           $(SRC_DIR)/hash_table_funcs.cpp \
           $(SRC_DIR)/hash_table_dump_funcs.cpp \
+          $(SRC_DIR)/parse_db_from_file.cpp \
 
 BUILD_DIR = build
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
