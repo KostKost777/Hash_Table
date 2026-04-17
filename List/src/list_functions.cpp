@@ -128,14 +128,14 @@ int InsertAfter(struct StructList* list,
 {
     assert(list != NULL);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: Before InsertAfter(%d, %d)</h3>\n", index, value);
     #endif
 
     int ret_value = Insert(list, index, value);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: After InsertAfter(%d, %d)</h3>\n", index, value);
     #endif
@@ -151,14 +151,14 @@ int InsertBefore(struct StructList* list,
     assert(func != NULL);
     assert(file != NULL);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: Before InsertBefore(%d, %d)</h3>\n", index, value);
     #endif
 
     int ret_value = Insert(list, GetPrevEl(list, index), value);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: After InsertBefore(%d, %d)</h3>\n", index, value);
     #endif
@@ -171,14 +171,14 @@ int InsertBeforeHead(struct StructList* list,
 {
     assert(list != NULL);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: Before InsertBeforeHead(%d)</h3>\n", value);
     #endif
 
     int ret_value = Insert(list, GetPrevEl(list, GetHead(list)), value);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: After InsertBeforeHead(%d)</h3>\n", value);
     #endif
@@ -191,14 +191,14 @@ int InsertAfterTail(struct StructList* list,
 {
     assert(list != NULL);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: Before InsertAfterTail(%d)</h3>\n", value);
     #endif
 
     int ret_value = Insert(list, GetTail(list), value);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: After InsertAFterTail(%d)</h3>\n", value);
     #endif
@@ -211,7 +211,7 @@ enum ReturnStatus DeleteElement(struct StructList* list,
 {
     assert(list != NULL);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
     ListDump(list, "\n<h3>\nDUMP: Before Delete(%d)</h3>\n", del_index);
     #endif
@@ -238,7 +238,7 @@ enum ReturnStatus DeleteElement(struct StructList* list,
 
     SetNumOfEl(list, GetNumOfEl(list) - 1);
 
-    #ifndef SPEED_TEST
+    #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
 
     ListDump(list, "\n<h3>\nDUMP: After Delete(%d)</h3>\n", del_index);
