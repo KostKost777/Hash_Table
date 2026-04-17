@@ -17,11 +17,13 @@ int main (void)
 {
     atexit(CloseLogFile);
 
+    struct StructList list = {};
+
     OpenLogFile();
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 7, AlwaysZeroHashFunc);
+    HashTableCtor(&table, 1009, LineLenHashFunc);
 
     struct Buffer buffer = {};
 
@@ -29,13 +31,12 @@ int main (void)
 
     FillHashTableFromBuffer(&table, &buffer);
 
-    printf("\n%s\n", buffer);
+   // printf("\n%s\n", buffer);
 
     // AddElemInHashTable(&table, "HELLO");
     // AddElemInHashTable(&table, "Bebra");
 
     HashTableDump(&table, "");
     HashTableDtor(&table);
-
     free(buffer.data);
 }

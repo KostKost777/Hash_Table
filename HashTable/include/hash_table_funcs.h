@@ -7,6 +7,8 @@
 #include "dump_functions.h"
 #include "set_get_functions.h"
 
+const size_t MAX_LEN = 32;
+
 struct HashTable
 {
     size_t size;
@@ -18,6 +20,8 @@ void HashTableCtor(HashTable* hash_table, size_t size,
                    size_t (*hash_func)(char* word));
 
 void HashTableDtor(HashTable* hash_table);
+
+bool IsWordExistInList(struct StructList* list, char* word);
 
 size_t AlwaysZeroHashFunc(char* word);
 

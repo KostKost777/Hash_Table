@@ -5,6 +5,10 @@
 #include <stdarg.h>
 #include <errno.h>
 
+#include "list_functions.h"
+#include "dump_functions.h"
+#include "set_get_functions.h"
+
 #include "hash_table_funcs.h"
 #include "hash_table_dump_funcs.h"
 
@@ -14,7 +18,7 @@ void HashTableCtor(HashTable* hash_table, size_t size,
     assert(hash_table);
     assert(hash_func);
 
-    hash_table->size = size;
+    hash_table->size      = size;
     hash_table->hash_func = hash_func;
 
     hash_table->table = (StructList**)calloc(sizeof(StructList*), size);
@@ -52,8 +56,17 @@ void AddElemInHashTable(HashTable* hash_table, char* new_word)
 
     size_t hash = hash_table->hash_func(new_word) % hash_table->size;
 
-    InsertAfterTail(hash_table->table[hash], new_word);
+    if (!IsWordExistInList(hash_table->table[hash], new_word))
+        InsertAfterTail(hash_table->table[hash], new_word);
+}
 
+bool IsWordExistInList(struct StructList* list, char* word)
+{
+    for (int i = 1; i <= list->num_of_el; ++i)
+        if (!strncmp(list->data[i], word, MAX_LEN))
+            return true;
+    
+    return false;
 }
 
 size_t AlwaysZeroHashFunc(char* word)
