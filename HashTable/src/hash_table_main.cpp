@@ -23,7 +23,7 @@ int main (void)
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 4001, CRC32_HashFunc);
+    HashTableCtor(&table, 1009, SymbolSumHashFunc);
 
     struct Buffer buffer = {};
 
@@ -35,12 +35,7 @@ int main (void)
 
     WriteHashTableDistribution(&table, output_file);
 
-   // printf("\n%s\n", buffer);
-
-    // AddElemInHashTable(&table, "HELLO");
-    // AddElemInHashTable(&table, "Bebra");
-
-    //HashTableDump(&table, "");
+    HashTableDump(&table, "");
     HashTableDtor(&table);
     free(buffer.data);
 }

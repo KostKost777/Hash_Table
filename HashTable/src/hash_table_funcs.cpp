@@ -15,7 +15,7 @@
 #include "hash_table_dump_funcs.h"
 
 void HashTableCtor(HashTable* hash_table, size_t size,
-                  size_t (*hash_func)(char* word))
+                   size_t (*hash_func)(char* word))
 {
     assert(hash_table);
     assert(hash_func);
