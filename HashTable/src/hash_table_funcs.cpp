@@ -20,6 +20,8 @@ void HashTableCtor(HashTable* hash_table, size_t size,
     assert(hash_table);
     assert(hash_func);
 
+    hash_table->error_code = 0;
+
     hash_table->size      = size;
     hash_table->hash_func = hash_func;
 
@@ -85,24 +87,28 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
 size_t AlwaysZeroHashFunc(char* word)
 {
     assert(word);
+
     return 0;
 }
 
 size_t FirstSymbolHashFunc(char* word)
 {
     assert(word);
+
     return word[0];
 }
 
 size_t LineLenHashFunc(char* word)
 {
     assert(word);
+
     return strlen(word);
 }
 
 size_t SymbolSumHashFunc(char* word)
 {
     assert(word);
+
     size_t hash = 0;
     for (size_t i = 0; word[i] != '\0'; i++)
         hash += word[i];
@@ -113,8 +119,9 @@ size_t SymbolSumHashFunc(char* word)
 size_t LeftShiftHashFunc(char* word)
 {
     assert(word);
+
     size_t hash = word[0];
-    for (size_t i = 0; word[i] != '\0'; i++)
+    for (size_t i = 1; word[i] != '\0'; i++)
         hash = (hash << 1) ^ word[i];
     
     return hash;
@@ -123,17 +130,30 @@ size_t LeftShiftHashFunc(char* word)
 size_t RightShiftHashFunc(char* word)
 {
     assert(word);
+
     size_t hash = word[0];
-    for (size_t i = 0; word[i] != '\0'; i++)
+    for (size_t i = 1; word[i] != '\0'; i++)
         hash = (hash >> 1) ^ word[i];
     
     return hash;
 }
 
+size_t DJB2_HashFunc(char* word) 
+{
+    assert(word);
+
+    size_t hash = 5381;
+    for (size_t i = 0; word[i] != '\0'; i++)
+        hash = ((hash << 5) + hash) + word[i];
+
+    return hash;
+}
+
 size_t CRC32_HashFunc(char* word) 
 {
+    assert(word);
+
     size_t hash = 0xFFFFFFFF;
-    
     for (size_t i = 0; word[i] != '\0'; i++) 
         hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
     

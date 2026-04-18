@@ -11,6 +11,7 @@ const size_t MAX_LEN = 32;
 
 struct HashTable
 {
+    int error_code;
     size_t size;
     size_t (*hash_func)(char* word);
     StructList** table;
@@ -40,5 +41,7 @@ size_t LeftShiftHashFunc(char* word);
 size_t RightShiftHashFunc(char* word);
 
 size_t CRC32_HashFunc(char* word);
+
+size_t DJB2_HashFunc(char* word);
 
 #endif

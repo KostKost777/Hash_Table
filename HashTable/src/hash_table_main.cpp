@@ -23,7 +23,7 @@ int main (void)
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 1009, SymbolSumHashFunc);
+    HashTableCtor(&table, 4001, RightShiftHashFunc);
 
     struct Buffer buffer = {};
 
@@ -35,7 +35,7 @@ int main (void)
 
     WriteHashTableDistribution(&table, output_file);
 
-    HashTableDump(&table, "");
+    //HashTableDump(&table, "");
     HashTableDtor(&table);
     free(buffer.data);
 }
