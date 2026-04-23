@@ -44,6 +44,8 @@ size_t RightShiftHashFunc(char* word);
 
 size_t CRC32_HashFunc(char* word);
 
+size_t CRC32_HashFunc_SIMD(char* word);
+
 size_t DJB2_HashFunc(char* word);
 
 #endif

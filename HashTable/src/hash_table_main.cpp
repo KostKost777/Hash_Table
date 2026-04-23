@@ -22,7 +22,7 @@ int main (void)
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 4001, CRC32_HashFunc);
+    HashTableCtor(&table, 4001, CRC32_HashFunc_SIMD);
 
     struct Buffer buffer = {};
 

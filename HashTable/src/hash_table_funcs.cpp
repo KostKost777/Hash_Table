@@ -49,7 +49,6 @@ void HashTableDtor(HashTable* hash_table)
         free(hash_table->table[i]);
     }
         
-
     free(hash_table->table);
 }
 
@@ -95,7 +94,7 @@ bool IsWordInHashTable(struct HashTable* hash_table, char* word)
     size_t hash = hash_table->hash_func(word) % hash_table->size;
 
     for (int i = 0; i < hash_table->table[hash]->num_of_el; ++i)
-        if (!strcmp(word, hash_table->table[hash]->data[i]))
+        if (!strncmp(word, hash_table->table[hash]->data[i], MAX_LEN))
             return true;
 
     return false;
@@ -187,13 +186,13 @@ size_t CRC32_HashFunc(char* word)
     return (crc ^ 0xFFFFFFFF);
 }
 
-// size_t CRC32_HashFunc(char* word) 
-// {
-//     assert(word);
+size_t CRC32_HashFunc_SIMD(char* word) 
+{
+    assert(word);
 
-//     size_t hash = 0xFFFFFFFF;
-//     for (size_t i = 0; word[i] != '\0'; i++) 
-//         hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
+    unsigned int hash = 0xFFFFFFFF;
+    for (size_t i = 0; word[i] != '\0'; i++) 
+        hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
     
-//     return hash ^ 0xFFFFFFFF;
-// }
+    return (size_t)hash ^ 0xFFFFFFFF;
+}
