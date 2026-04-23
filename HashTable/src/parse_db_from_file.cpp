@@ -10,17 +10,20 @@
 #include "hash_table_dump_funcs.h"
 #include "parse_db_from_file.h"
 
-void FillBufferFromFile(struct Buffer* buffer, char* file_name)
+void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
 {
     assert(file_name);
 
     FILE* file = fopen(file_name, "a+");
     assert(file);
 
-    buffer->size= GetSizeOfFile(file_name);
+    ssize_t file_size = GetSizeOfFile(file_name);
+    assert(file_size != -1);
+
+    buffer->size = (size_t)file_size; 
     buffer->size++;
 
-    printf("SIZE: %d\n", buffer->size);
+    //printf("SIZE: %llu\n", buffer->size);
 
     buffer->data = (char*)calloc(buffer->size, sizeof(char));
 
@@ -44,7 +47,7 @@ void FillHashTableFromBuffer(struct HashTable* hash_table, struct Buffer* buffer
     char* word_begin_ptr = buffer->data;
     char* cur_sym_ptr    = buffer->data;
 
-    for (int i = 0; i < buffer->size; ++i, cur_sym_ptr++)
+    for (size_t i = 0; i < buffer->size; ++i, cur_sym_ptr++)
     {
         if (*cur_sym_ptr == '\0')
         {
@@ -56,7 +59,7 @@ void FillHashTableFromBuffer(struct HashTable* hash_table, struct Buffer* buffer
 
 void ReplaceSymbolInBuffer(struct Buffer* buffer, char old_sym, char new_sym)
 {
-    for (int i = 0; i < buffer->size; ++i)
+    for (size_t i = 0; i < buffer->size; ++i)
     {
         if (buffer->data[i] == old_sym)
             buffer->data[i] = new_sym;

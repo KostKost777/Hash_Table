@@ -58,6 +58,10 @@ void AddElemInHashTable(HashTable* hash_table, char* new_word)
     assert(hash_table);
     assert(new_word);
 
+    #ifndef BENCHMARK_MODE
+    HASH_TABLE_VERIFIER(hash_table);
+    #endif
+
     size_t hash = hash_table->hash_func(new_word) % hash_table->size;
 
     if (!IsWordExistInList(hash_table->table[hash], new_word))
@@ -69,7 +73,7 @@ bool IsWordExistInList(struct StructList* list, char* word)
     assert(list);
     assert(word);
 
-    for (size_t i = 1; i <= list->num_of_el; ++i)
+    for (int i = 1; i <= list->num_of_el; ++i)
         if (!strncmp(list->data[i], word, MAX_LEN))
             return true;
     
@@ -84,6 +88,19 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
         fprintf(output_file, "%d\n", hash_table->table[i]->num_of_el);
 }
 
+bool IsWordInHashTable(struct HashTable* hash_table, char* word)
+{
+    assert(hash_table);
+
+    size_t hash = hash_table->hash_func(word) % hash_table->size;
+
+    for (int i = 0; i < hash_table->table[hash]->num_of_el; ++i)
+        if (!strcmp(word, hash_table->table[hash]->data[i]))
+            return true;
+
+    return false;
+}
+
 size_t AlwaysZeroHashFunc(char* word)
 {
     assert(word);
@@ -95,7 +112,7 @@ size_t FirstSymbolHashFunc(char* word)
 {
     assert(word);
 
-    return word[0];
+    return (size_t)word[0];
 }
 
 size_t LineLenHashFunc(char* word)
@@ -111,7 +128,7 @@ size_t SymbolSumHashFunc(char* word)
 
     size_t hash = 0;
     for (size_t i = 0; word[i] != '\0'; i++)
-        hash += word[i];
+        hash += (size_t)word[i];
     
     return hash;
 }
@@ -120,9 +137,9 @@ size_t LeftShiftHashFunc(char* word)
 {
     assert(word);
 
-    size_t hash = word[0];
+    size_t hash = (size_t)word[0];
     for (size_t i = 1; word[i] != '\0'; i++)
-        hash = (hash << 1) ^ word[i];
+        hash = (hash << 1) ^ (size_t)word[i];
     
     return hash;
 }
@@ -131,9 +148,9 @@ size_t RightShiftHashFunc(char* word)
 {
     assert(word);
 
-    size_t hash = word[0];
+    size_t hash = (size_t)word[0];
     for (size_t i = 1; word[i] != '\0'; i++)
-        hash = (hash >> 1) ^ word[i];
+        hash = (hash >> 1) ^ (size_t)word[i];
     
     return hash;
 }
@@ -144,7 +161,7 @@ size_t DJB2_HashFunc(char* word)
 
     size_t hash = 5381;
     for (size_t i = 0; word[i] != '\0'; i++)
-        hash = ((hash << 5) + hash) + word[i];
+        hash = ((hash << 5) + hash) + (size_t)word[i];
 
     return hash;
 }
@@ -152,10 +169,31 @@ size_t DJB2_HashFunc(char* word)
 size_t CRC32_HashFunc(char* word) 
 {
     assert(word);
-
-    size_t hash = 0xFFFFFFFF;
-    for (size_t i = 0; word[i] != '\0'; i++) 
-        hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
     
-    return hash ^ 0xFFFFFFFF;
+    size_t crc = 0xFFFFFFFF;
+    
+    for (size_t i = 0; word[i] != '\0'; i++) {
+        size_t byte = (size_t)word[i];
+        crc ^= byte;
+        
+        for (int bit = 0; bit < 8; bit++) {
+            if (crc & 1)
+                crc = (crc >> 1) ^ 0xEDB88320;
+            else
+                crc >>= 1;
+        }
+    }
+    
+    return (crc ^ 0xFFFFFFFF);
 }
+
+// size_t CRC32_HashFunc(char* word) 
+// {
+//     assert(word);
+
+//     size_t hash = 0xFFFFFFFF;
+//     for (size_t i = 0; word[i] != '\0'; i++) 
+//         hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
+    
+//     return hash ^ 0xFFFFFFFF;
+// }

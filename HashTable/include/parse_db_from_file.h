@@ -7,7 +7,7 @@ struct Buffer
     size_t size;
 };
 
-void FillBufferFromFile(struct Buffer* buffer, char* file_name);
+void FillBufferFromFile(struct Buffer* buffer, const char* file_name);
 
 void FillHashTableFromBuffer(struct HashTable* hash_table, 
                              struct Buffer*    buffer);

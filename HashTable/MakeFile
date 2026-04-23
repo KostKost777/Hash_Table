@@ -10,14 +10,15 @@ SOURCES = $(SRC_DIR)/hash_table_main.cpp \
           $(SRC_DIR)/hash_table_funcs.cpp \
           $(SRC_DIR)/hash_table_dump_funcs.cpp \
           $(SRC_DIR)/parse_db_from_file.cpp \
+          $(SRC_DIR)/hash_table_test_funcs.cpp \
 
 BUILD_DIR = build
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
 
 CXX = g++
 CXX_STANDARD = -std=c++20
-OPTIMIZATION = -O3 -mavx2
-DEBUG_FLAGS = -g -D _DEBUG -ggdb3 -fno-omit-frame-pointer
+OPTIMIZATION = 
+DEBUG_FLAGS = -g -D BENCHMARK_MODE -D _DEBUG -ggdb3 -fno-omit-frame-pointer
 
 WARNING_FLAGS = -Wall -Wextra -Weffc++ \
                 -Waggressive-loop-optimizations \
@@ -76,9 +77,9 @@ WARNING_FLAGS = -Wall -Wextra -Weffc++ \
 				-flto-odr-type-merging \
 				-pie -fPIE
 
-SANITIZER_FLAGS = -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
+SANITIZER_FLAGS = 
 
-LDFLAGS = $(SANITIZER_FLAGS)
+LDFLAGS = 
 INCLUDES = -I ../List/include  \
            -I include  \
 

@@ -67,4 +67,6 @@ enum ReturnStatus HashTableDump(HashTable* hash_table, const char* message, ...)
     for (size_t i = 0; i < hash_table->size; ++i)
         if (ListDump(hash_table->table[i], "<h2>Индекс списка: %d<h2>", i) == error)
             return error;
+
+    return success;
 }

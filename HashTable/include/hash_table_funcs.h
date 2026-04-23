@@ -28,6 +28,8 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
 
 void AddElemInHashTable(HashTable* hash_table, char* new_word);
 
+bool IsWordInHashTable(struct HashTable* hash_table, char* word);
+
 size_t AlwaysZeroHashFunc(char* word);
 
 size_t FirstSymbolHashFunc(char* word);

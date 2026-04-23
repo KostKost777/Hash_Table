@@ -11,29 +11,30 @@
 
 #include "hash_table_funcs.h"
 #include "hash_table_dump_funcs.h"
+#include "hash_table_test_funcs.h"
 #include "parse_db_from_file.h"
 
 int main (void)
 {
     atexit(CloseLogFile);
 
-    struct StructList list = {};
-
     OpenLogFile();
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 4001, RightShiftHashFunc);
+    HashTableCtor(&table, 4001, CRC32_HashFunc);
 
     struct Buffer buffer = {};
 
     FillBufferFromFile(&buffer, "database/database.txt");
     FillHashTableFromBuffer(&table, &buffer);
 
-    FILE* output_file = fopen("../Discription/output.txt", "w+");
-    assert(output_file);
+    RunHashTableTestFromFile(&table, "tests/test.txt");
 
-    WriteHashTableDistribution(&table, output_file);
+    // FILE* output_file = fopen("../Discription/output.txt", "w+");
+    // assert(output_file);
+
+    // WriteHashTableDistribution(&table, output_file);
 
     //HashTableDump(&table, "");
     HashTableDtor(&table);
