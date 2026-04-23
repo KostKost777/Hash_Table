@@ -11,10 +11,10 @@ const size_t MAX_LEN = 32;
 
 struct HashTable
 {
-    int error_code;
     size_t size;
     size_t (*hash_func)(char* word);
     StructList** table;
+    int error_code;
 };
 
 void HashTableCtor(HashTable* hash_table, size_t size, 

@@ -4,3 +4,5 @@
 *.o
 List/bin
 HashTable/bin
+*.data
+*.data.old

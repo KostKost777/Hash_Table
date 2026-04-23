@@ -22,10 +22,21 @@ void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_fil
     FILE* test_file = fopen(test_file_name, "r+");
     assert(test_file);
 
-    char word_buffer[MAX_LEN] = {};
+    struct Buffer buffer = {};
 
-    while (fscanf(test_file, "%31s", word_buffer) == 1)
-        IsWordInHashTable(hash_table, word_buffer);
+    FillBufferFromFile(&buffer, test_file_name);
+
+    char* word_begin_ptr = buffer.data;
+
+    for(size_t i = 0; i < buffer.size; ++i)
+    {
+        if (buffer.data[i] == '\0')
+        {
+            //printf("%s - %llu \n", word_begin_ptr, i);
+            IsWordInHashTable(hash_table, word_begin_ptr);
+            word_begin_ptr = buffer.data + i + 1;
+        }
+    }
     
     //printf("FIND WORDS: %d\n", find_words);
 

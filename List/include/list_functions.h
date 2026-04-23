@@ -16,7 +16,7 @@ enum ReturnStatus
 
 struct StructList
 {
-    const char** data;;
+    const char** data;
     int* next;
     int* prev;
     int free;
