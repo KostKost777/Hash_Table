@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <immintrin.h>
 #include <sys/stat.h>
 
 #include "hash_table_funcs.h"
@@ -59,7 +60,20 @@ void FillHashTableFromBuffer(struct HashTable* hash_table, struct Buffer* buffer
 
 void ReplaceSymbolInBuffer(struct Buffer* buffer, char old_sym, char new_sym)
 {
-    for (size_t i = 0; i < buffer->size; ++i)
+    __m256i old_vec = _mm256_set1_epi8(old_sym);
+    __m256i new_vec = _mm256_set1_epi8(new_sym);
+
+    size_t i = 0;
+
+    for(;i + 31 < buffer->size; i += 32)
+    {
+        __m256i load_vec = _mm256_loadu_si256((__m256i*)(buffer->data + i));
+        __m256i mask_vec = _mm256_cmpeq_epi8(load_vec, old_vec);
+        __m256i res_vec  = _mm256_blendv_epi8(load_vec, new_vec, mask_vec);
+        _mm256_storeu_si256((__m256i*)(buffer->data + i), res_vec);
+    }
+
+    for (; i < buffer->size; i++)
     {
         if (buffer->data[i] == old_sym)
             buffer->data[i] = new_sym;

@@ -42,7 +42,7 @@ int GetCapacity(struct StructList* list)
 const char* GetDataEl(struct StructList* list, int index)
 {
     assert(list);
-    return list->data[index];
+    return list->data[index].str;
 }
 
 int GetPrevEl(struct StructList* list, int index)
@@ -62,7 +62,6 @@ int GetErrCode(struct StructList* list)
     assert(list);
     return list->err_code;
 }
-
 
 //SET
 
@@ -99,7 +98,8 @@ void SetCapacity(struct StructList* list, int value)
 void SetDataEl(struct StructList* list, int index, const char* value)
 {
     assert(list);
-    list->data[index] = value;
+    list->data[index].str = value;
+    list->data[index].len = strlen(value);
 }
 
 void SetPrevEl(struct StructList* list, int index, int value)

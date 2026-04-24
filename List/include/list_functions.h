@@ -14,9 +14,15 @@ enum ReturnStatus
     fatal_error = -2,
 };
 
+struct Data
+{
+    size_t len;
+    const char* str;
+};
+
 struct StructList
 {
-    const char** data;
+    struct Data* data;
     int* next;
     int* prev;
     int free;

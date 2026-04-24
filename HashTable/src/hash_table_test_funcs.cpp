@@ -32,7 +32,6 @@ void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_fil
     {
         if (buffer.data[i] == '\0')
         {
-            //printf("%s - %llu \n", word_begin_ptr, i);
             IsWordInHashTable(hash_table, word_begin_ptr);
             word_begin_ptr = buffer.data + i + 1;
         }

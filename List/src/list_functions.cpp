@@ -52,7 +52,7 @@ ReturnStatus ListCtor(struct StructList* list, int capacity)
 
     SetCapacity(list, capacity);
 
-    list->data = (const char**)calloc(GetCapacity(list), sizeof(const char*));
+    list->data = (struct Data*)calloc(GetCapacity(list), sizeof(struct Data));
 
     list->next = (int*)calloc(GetCapacity(list), sizeof(int));
 
@@ -87,7 +87,7 @@ void ListDtor(struct StructList* list)
     list->prev = NULL;
 }
 
-int Insert(struct StructList* list, int index, const char*  value)
+int Insert(struct StructList* list, int index, const char* value)
 {
     if (   index < 0
         || GetPrevEl(list, index) == -1
@@ -109,11 +109,14 @@ int Insert(struct StructList* list, int index, const char*  value)
 
     SetFree(list, GetNextEl(list, GetFree(list)));
 
-    SetNextEl(list, old_free, GetNextEl(list, index));
+    list->next[old_free] = list->next[index];
+
+   // SetNextEl(list, old_free, GetNextEl(list, index));
 
     SetPrevEl(list, GetNextEl(list, index), old_free);
 
-    SetNextEl(list, index, old_free);
+    list->next[index] = old_free;
+    //SetNextEl(list, index, old_free);
 
     SetPrevEl(list, old_free, index);
 
@@ -196,7 +199,7 @@ int InsertAfterTail(struct StructList* list,
     ListDump(list, "\n<h3>\nDUMP: Before InsertAfterTail(%d)</h3>\n", value);
     #endif
 
-    int ret_value = Insert(list, GetTail(list), value);
+    int ret_value = Insert(list, list->prev[0], value);
 
     #ifndef BENCHMARK_MODE
     LIST_VERIFIER(list);
@@ -342,7 +345,7 @@ enum ReturnStatus UpwardReallocate(struct StructList* list)
 {
     assert(list != NULL);
 
-    const char** new_data = (const char**)realloc(list->data, sizeof(const char*) * GetCapacity(list) * 2);
+    struct Data* new_data = (struct Data*)realloc(list->data, sizeof(struct Data) * GetCapacity(list) * 2);
     int* new_next         = (int*)realloc(list->next, sizeof(int) * GetCapacity(list) * 2);
     int* new_prev         = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list) * 2);
 
@@ -425,7 +428,7 @@ enum ReturnStatus DownwardReallocate(struct StructList* list, bool with_lineariz
         SetFree(list, 0);
 
 
-    const char** new_data = (const char**)realloc(list->data, sizeof(const char*) * GetCapacity(list));
+    struct Data* new_data = (struct Data*)realloc(list->data, sizeof(struct Data) * GetCapacity(list));
     int* new_next         = (int*)realloc(list->next, sizeof(int) * GetCapacity(list));
     int* new_prev         = (int*)realloc(list->prev, sizeof(int) * GetCapacity(list));
 

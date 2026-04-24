@@ -72,8 +72,11 @@ bool IsWordExistInList(struct StructList* list, char* word)
     assert(list);
     assert(word);
 
+    size_t word_len = strlen(word);
+
     for (int i = 1; i <= list->num_of_el; ++i)
-        if (!strncmp(list->data[i], word, MAX_LEN))
+        if (   list->data[i].len == word_len
+            && !strncmp(list->data[i].str, word, MAX_LEN))
             return true;
     
     return false;
@@ -87,17 +90,13 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
         fprintf(output_file, "%d\n", hash_table->table[i]->num_of_el);
 }
 
-bool IsWordInHashTable(struct HashTable* hash_table, char* word)
+ bool IsWordInHashTable(struct HashTable* hash_table, char* word)
 {
     assert(hash_table);
 
     size_t hash = hash_table->hash_func(word) % hash_table->size;
 
-    for (int i = 0; i < hash_table->table[hash]->num_of_el; ++i)
-        if (!strncmp(word, hash_table->table[hash]->data[i], MAX_LEN))
-            return true;
-
-    return false;
+    return IsWordExistInList(hash_table->table[hash], word);
 }
 
 size_t AlwaysZeroHashFunc(char* word)
