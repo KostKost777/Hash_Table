@@ -14,7 +14,7 @@
 #include "hash_table_test_funcs.h"
 #include "parse_db_from_file.h"
 
-void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_file_name)
+int RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_file_name)
 {
     assert(hash_table);
     assert(test_file_name);
@@ -28,14 +28,14 @@ void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_fil
 
     char* word_begin_ptr = buffer.data;
     size_t hash = 0;
-    volatile bool res = false;
+    volatile int find_words = 0;
 
     for(size_t i = 0; i < buffer.size; ++i)
     {
         if (buffer.data[i] == '\0')
         {
             hash = hash_table->hash_func(word_begin_ptr) % hash_table->size;
-            res = IsWordInList(hash_table->table[hash], word_begin_ptr);
+            find_words += IsWordInList(hash_table->table[hash], word_begin_ptr);
             word_begin_ptr = buffer.data + i + 1;
         }
     }
@@ -43,4 +43,6 @@ void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_fil
     //printf("FIND WORDS: %d\n", find_words);
 
     fclose(test_file);
+
+    return find_words;
 }

@@ -24,7 +24,7 @@ NASM = nasm
 NASMFLAGS = -f elf64 -g
 
 CXX_STANDARD = -std=c++20
-OPTIMIZATION = -O3 -mavx2
+OPTIMIZATION = 
 DEBUG_FLAGS = -g -D BENCHMARK_MODE -DNDEBUG
 
 WARNING_FLAGS = -Wall -Wextra -Weffc++ \

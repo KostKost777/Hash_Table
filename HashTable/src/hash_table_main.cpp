@@ -22,14 +22,15 @@ int main (void)
 
     struct HashTable table = {};
 
-    HashTableCtor(&table, 4001, CRC32_HashFunc_SIMD);
+    HashTableCtor(&table, 4001, CRC32_HashFunc);
 
     struct Buffer buffer = {};
 
     FillBufferFromFile(&buffer, "database/database.txt");
     FillHashTableFromBuffer(&table, &buffer);
 
-    RunHashTableTestFromFile(&table, "tests/test.txt");
+    volatile int res = RunHashTableTestFromFile(&table, "tests/test.txt");
+    printf("FIND: %d\n", res);
 
     // FILE* output_file = fopen("../Discription/output.txt", "w+");
     // assert(output_file);
@@ -37,6 +38,7 @@ int main (void)
     // WriteHashTableDistribution(&table, output_file);
 
     //HashTableDump(&table, "");
+
     HashTableDtor(&table);
     free(buffer.data);
 }
