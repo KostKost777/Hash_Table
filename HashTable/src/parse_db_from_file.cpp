@@ -28,16 +28,17 @@ void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
 
     buffer->data = (char*)calloc(buffer->size, sizeof(char));
 
-    size_t read_symbols = fread(buffer->data, sizeof(char), buffer->size, file);
-    buffer->data[buffer->size - 1] = '\0';
+    buffer->data = (char*)aligned_alloc(MAX_LEN, buffer->size + MAX_LEN);
+    assert(buffer->data);
+    
+    memset(buffer->data, 0, buffer->size + MAX_LEN);
 
-    if (read_symbols + 1 != buffer->size)
-    {
-        assert(false);
-        free(buffer->data);
-    }
+    fread(buffer->data, sizeof(char), buffer->size, file);
+    buffer->data[buffer->size] = '\0';
 
     ReplaceSymbolInBuffer(buffer, '\n', '\0');
+
+    fclose(file);
 }
 
 void FillHashTableFromBuffer(struct HashTable* hash_table, struct Buffer* buffer)

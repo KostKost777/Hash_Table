@@ -22,13 +22,11 @@ void HashTableCtor(HashTable* hash_table, size_t size,
 
 void HashTableDtor(HashTable* hash_table);
 
-bool IsWordExistInList(struct StructList* list, char* word);
-
 void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file);
 
 void AddElemInHashTable(HashTable* hash_table, char* new_word);
 
-bool IsWordInHashTable(struct HashTable* hash_table, char* word);
+bool IsWordInList(struct StructList* list, char* word);
 
 size_t AlwaysZeroHashFunc(char* word);
 
@@ -47,5 +45,9 @@ size_t CRC32_HashFunc(char* word);
 size_t CRC32_HashFunc_SIMD(char* word);
 
 size_t DJB2_HashFunc(char* word);
+
+extern "C" {
+    bool MyStrCmp(const char* str1, const char* str2);
+}
 
 #endif

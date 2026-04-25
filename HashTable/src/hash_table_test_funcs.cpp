@@ -27,12 +27,15 @@ void RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_fil
     FillBufferFromFile(&buffer, test_file_name);
 
     char* word_begin_ptr = buffer.data;
+    size_t hash = 0;
+    volatile bool res = false;
 
     for(size_t i = 0; i < buffer.size; ++i)
     {
         if (buffer.data[i] == '\0')
         {
-            IsWordInHashTable(hash_table, word_begin_ptr);
+            hash = hash_table->hash_func(word_begin_ptr) % hash_table->size;
+            res = IsWordInList(hash_table->table[hash], word_begin_ptr);
             word_begin_ptr = buffer.data + i + 1;
         }
     }

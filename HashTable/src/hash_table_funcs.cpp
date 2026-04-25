@@ -63,23 +63,8 @@ void AddElemInHashTable(HashTable* hash_table, char* new_word)
 
     size_t hash = hash_table->hash_func(new_word) % hash_table->size;
 
-    if (!IsWordExistInList(hash_table->table[hash], new_word))
+    if (!IsWordInList(hash_table->table[hash], new_word))
         InsertAfterTail(hash_table->table[hash], new_word);
-}
-
-bool IsWordExistInList(struct StructList* list, char* word)
-{
-    assert(list);
-    assert(word);
-
-    size_t word_len = strlen(word);
-
-    for (int i = 1; i <= list->num_of_el; ++i)
-        if (   list->data[i].len == word_len
-            && !strncmp(list->data[i].str, word, MAX_LEN))
-            return true;
-    
-    return false;
 }
 
 void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
@@ -90,13 +75,19 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
         fprintf(output_file, "%d\n", hash_table->table[i]->num_of_el);
 }
 
- bool IsWordInHashTable(struct HashTable* hash_table, char* word)
+bool IsWordInList(struct StructList* list, char* word)
 {
-    assert(hash_table);
+    assert(list);
+    size_t word_len = strlen(word);
 
-    size_t hash = hash_table->hash_func(word) % hash_table->size;
+    int num_of_el = list->num_of_el;
 
-    return IsWordExistInList(hash_table->table[hash], word);
+    for (int i = 1; i <= num_of_el; ++i)
+        if (   list->data[i].len == word_len
+            && strcmp(list->data[i].str, word))
+            return true;
+    
+    return false;
 }
 
 size_t AlwaysZeroHashFunc(char* word)

@@ -6,19 +6,26 @@ LIST_OBJECTS = $(LIST_BUILD_DIR)/dump_functions.o \
                $(LIST_BUILD_DIR)/list_set_get_functions.o
 
 SRC_DIR = src
-SOURCES = $(SRC_DIR)/hash_table_main.cpp \
-          $(SRC_DIR)/hash_table_funcs.cpp \
-          $(SRC_DIR)/hash_table_dump_funcs.cpp \
-          $(SRC_DIR)/parse_db_from_file.cpp \
-          $(SRC_DIR)/hash_table_test_funcs.cpp \
+SOURCES_CXX = $(SRC_DIR)/hash_table_main.cpp \
+              $(SRC_DIR)/hash_table_funcs.cpp \
+              $(SRC_DIR)/hash_table_dump_funcs.cpp \
+              $(SRC_DIR)/parse_db_from_file.cpp \
+              $(SRC_DIR)/hash_table_test_funcs.cpp
+
+SOURCES_ASM = $(SRC_DIR)/my_strcmp.asm
 
 BUILD_DIR = build
-OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
+OBJECTS_CXX = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES_CXX:.cpp=.o)))
+OBJECTS_ASM = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES_ASM:.asm=.o)))
+OBJECTS = $(OBJECTS_CXX) $(OBJECTS_ASM)
 
 CXX = g++
+NASM = nasm
+NASMFLAGS = -f elf64 -g
+
 CXX_STANDARD = -std=c++20
 OPTIMIZATION = -O3 -mavx2
-DEBUG_FLAGS = -g -D BENCHMARK_MODE -D _DEBUG -ggdb3 -fno-omit-frame-pointer
+DEBUG_FLAGS = -g -D BENCHMARK_MODE -DNDEBUG
 
 WARNING_FLAGS = -Wall -Wextra -Weffc++ \
                 -Waggressive-loop-optimizations \
@@ -81,7 +88,7 @@ SANITIZER_FLAGS =
 
 LDFLAGS = 
 INCLUDES = -I ../List/include  \
-           -I include  \
+           -I include
 
 CXXFLAGS = $(OPTIMIZATION) $(DEBUG_FLAGS) $(WARNING_FLAGS) $(SANITIZER_FLAGS) $(CXX_STANDARD) $(INCLUDES)
 
@@ -91,10 +98,16 @@ $(TARGET): $(BUILD_DIR) $(OBJECTS) $(LIST_OBJECTS)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm | $(BUILD_DIR)
+	$(NASM) $(NASMFLAGS) $< -o $@
+
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS) $(OBJECTS_CXX) $(OBJECTS_ASM)
 
-.PHONY: clean
+clean-all: clean
+	rm -rf $(BUILD_DIR)
+
+.PHONY: clean clean-all
