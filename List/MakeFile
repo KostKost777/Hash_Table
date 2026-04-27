@@ -11,9 +11,9 @@ OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
 
 CXX = g++
 
-CXX_STANDARD = -std=c++20
+CXX_STANDARD = 
 
-OPTIMIZATION =
+OPTIMIZATION = -O3 -march=native
 
 DEBUG_FLAGS = -g -D BENCHMARK_MODE -DNDEBUG
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <immintrin.h>
 #include <stdarg.h>
 #include <errno.h>
 #include <stdint.h>
@@ -83,7 +84,7 @@ bool IsWordInList(struct StructList* list, char* word)
 
     for (int i = 1; i <= num_of_el; ++i)
     {
-        if (!strncmp(list->data[i].str, word, MAX_LEN))
+        if (!MyStrCmp(list->data[i].str, word))
             return true;
     }
     
@@ -176,13 +177,13 @@ size_t CRC32_HashFunc(char* word)
     return (crc ^ 0xFFFFFFFF);
 }
 
-// size_t CRC32_HashFunc_SIMD(char* word) 
-// {
-//     assert(word);
+size_t CRC32_HashFunc_SIMD(char* word) 
+{
+    assert(word);
 
-//     unsigned int hash = 0xFFFFFFFF;
-//     for (size_t i = 0; word[i] != '\0'; i++) 
-//         hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
+    unsigned int hash = 0xFFFFFFFF;
+    for (size_t i = 0; word[i] != '\0'; i++) 
+        hash = _mm_crc32_u8(hash, (uint8_t)word[i]);
     
-//     return (size_t)hash ^ 0xFFFFFFFF;
-// }
+    return (size_t)hash ^ 0xFFFFFFFF;
+}

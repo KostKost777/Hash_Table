@@ -11,42 +11,11 @@
 #include "hash_table_dump_funcs.h"
 #include "parse_db_from_file.h"
 
-// void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
-// {
-//     assert(file_name);
-
-//     FILE* file = fopen(file_name, "a+");
-//     assert(file);
-
-//     ssize_t file_size = GetSizeOfFile(file_name);
-//     assert(file_size != -1);
-
-//     buffer->size = (size_t)file_size; 
-//     buffer->size++;
-
-//     //printf("SIZE: %llu\n", buffer->size);
-
-//     buffer->data = (char*)calloc(buffer->size, sizeof(char));
-
-//     buffer->data = (char*)aligned_alloc(MAX_LEN, buffer->size + MAX_LEN);
-//     assert(buffer->data);
-    
-//     memset(buffer->data, 0, buffer->size + MAX_LEN);
-
-//     fread(buffer->data, sizeof(char), buffer->size, file);
-//     buffer->data[buffer->size] = '\0';
-
-//     ReplaceSymbolInBuffer(buffer, '\n', '\0');
-
-//     fclose(file);
-// }
-
-
 void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
 {
     assert(file_name);
 
-    FILE* file = fopen(file_name, "a+");
+    FILE* file = fopen(file_name, "r");
     assert(file);
 
     ssize_t file_size = GetSizeOfFile(file_name);
@@ -71,22 +40,52 @@ void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
     ReplaceSymbolInBuffer(buffer, '\n', '\0');
 }
 
-void FillHashTableFromBuffer(struct HashTable* hash_table, struct Buffer* buffer)
+void FillPtrArrayFromBuffer(struct Buffer* buffer, struct PtrArray* ptr_arr)
 {
-    assert(hash_table);
     assert(buffer);
+    assert(ptr_arr);
+
+    ptr_arr->size = CountWordInBuffer(buffer);
+
+    //printf("PTR_ARR_SIZE: %llu\n", ptr_arr->size);
+
+    ptr_arr->data = (char**)calloc(ptr_arr->size, sizeof(char*));
 
     char* word_begin_ptr = buffer->data;
-    char* cur_sym_ptr    = buffer->data;
+    size_t ptr_arr_iter = 0;
 
-    for (size_t i = 0; i < buffer->size; ++i, cur_sym_ptr++)
+    for (size_t buffer_iter = 0; buffer_iter < buffer->size; ++buffer_iter)
     {
-        if (*cur_sym_ptr == '\0')
+        if (buffer->data[buffer_iter] == '\0')
         {
-            AddElemInHashTable(hash_table, word_begin_ptr);
-            word_begin_ptr = cur_sym_ptr + 1;
+            ptr_arr->data[ptr_arr_iter] = word_begin_ptr;
+            word_begin_ptr = buffer->data + buffer_iter + 1;
+            ptr_arr_iter++;
         }
     }
+}
+
+size_t CountWordInBuffer(struct Buffer* buffer)
+{
+    assert(buffer);
+
+    size_t num_of_words = 0;
+
+    for (size_t i = 0; i < buffer->size; ++i)
+        if (buffer->data[i] == '\0') 
+            num_of_words++;
+
+    return num_of_words;
+}
+
+void FillHashTableFromPtrArr(struct HashTable* hash_table, struct PtrArray* ptr_arr)
+{
+    assert(hash_table);
+    assert(ptr_arr);
+
+    for (size_t i = 0; i < ptr_arr->size; ++i)
+        AddElemInHashTable(hash_table, ptr_arr->data[i]);
+    
 }
 
 void ReplaceSymbolInBuffer(struct Buffer* buffer, char old_sym, char new_sym)
@@ -130,5 +129,21 @@ ssize_t GetSizeOfFile(const char* filename)
         return -1;
     }
     return file_info.st_size;
+}
+
+void PtrArrayDtor(struct PtrArray* ptr_arr)
+{
+    assert(ptr_arr);
+
+    free(ptr_arr->data);
+    ptr_arr->size = 0;
+}
+
+void BufferDtor(struct Buffer* buffer)
+{
+    assert(buffer);
+
+    free(buffer->data);
+    buffer->size = 0;
 }
 

@@ -14,35 +14,38 @@
 #include "hash_table_test_funcs.h"
 #include "parse_db_from_file.h"
 
-int RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_file_name)
+size_t RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_file_name, int iter)
 {
     assert(hash_table);
     assert(test_file_name);
 
-    FILE* test_file = fopen(test_file_name, "r+");
+    FILE* test_file = fopen(test_file_name, "r");
     assert(test_file);
 
     struct Buffer buffer = {};
 
     FillBufferFromFile(&buffer, test_file_name);
 
-    char* word_begin_ptr = buffer.data;
-    size_t hash = 0;
-    volatile int find_words = 0;
+    struct PtrArray ptr_arr = {};
 
-    for(size_t i = 0; i < buffer.size; ++i)
+    FillPtrArrayFromBuffer(&buffer, &ptr_arr);
+
+    size_t find_words = 0;
+    size_t hash = 0;
+
+    for (int count = 0; count < iter; ++count)
     {
-        if (buffer.data[i] == '\0')
+        for(size_t i = 0; i < ptr_arr.size; ++i)
         {
-            hash = hash_table->hash_func(word_begin_ptr) % hash_table->size;
-            find_words += IsWordInList(hash_table->table[hash], word_begin_ptr);
-            word_begin_ptr = buffer.data + i + 1;
+            hash = hash_table->hash_func(ptr_arr.data[i]) % hash_table->size;
+            find_words += IsWordInList(hash_table->table[hash], ptr_arr.data[i]);
         }
     }
     
-    //printf("FIND WORDS: %d\n", find_words);
-
     fclose(test_file);
+
+    BufferDtor(&buffer);
+    PtrArrayDtor(&ptr_arr);
 
     return find_words;
 }

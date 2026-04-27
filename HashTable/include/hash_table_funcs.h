@@ -47,7 +47,7 @@ size_t CRC32_HashFunc_SIMD(char* word);
 size_t DJB2_HashFunc(char* word);
 
 extern "C" {
-    bool MyStrCmp(const char* str1, const char* str2);
+    int MyStrCmp(const char* str1, const char* str2);
 }
 
 #endif
