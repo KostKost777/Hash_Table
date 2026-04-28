@@ -31,14 +31,31 @@ size_t RunHashTableTestFromFile(struct HashTable* hash_table, const char* test_f
     FillPtrArrayFromBuffer(&buffer, &ptr_arr);
 
     size_t find_words = 0;
-    size_t hash = 0;
+    size_t hash_table_index = 0;
+
+    uint64_t reverse_table_size = (uint64_t)((((__uint128_t)1 << 64)) / hash_table->size + 1);
 
     for (int count = 0; count < iter; ++count)
     {
         for(size_t i = 0; i < ptr_arr.size; ++i)
         {
-            hash = hash_table->hash_func(ptr_arr.data[i]) % hash_table->size;
-            find_words += IsWordInList(hash_table->table[hash], ptr_arr.data[i]);
+            size_t hash_value = hash_table->hash_func(ptr_arr.data[i]);
+            uint64_t quotient = 0;
+
+            __asm__ (
+                ".intel_syntax noprefix\n"
+                "mulx %[hash_value], rcx, rax\n" 
+                ".att_syntax prefix\n"
+                : [quotient] "=a" (quotient) 
+                : [hash_value] "r" (hash_value),
+                "d" (reverse_table_size)
+                : "rcx", "cc"
+            );
+
+            hash_table_index = hash_value - quotient * hash_table->size;
+
+            find_words += IsWordInList(hash_table->table[hash_table_index], 
+                                       ptr_arr.data[i]);
         }
     }
     

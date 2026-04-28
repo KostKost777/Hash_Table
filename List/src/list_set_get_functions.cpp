@@ -99,7 +99,7 @@ void SetDataEl(struct StructList* list, int index, const char* value)
 {
     assert(list);
     list->data[index].str = value;
-    list->data[index].len = strlen(value);
+    list->data[index].len = __builtin_strlen(value);
 }
 
 void SetPrevEl(struct StructList* list, int index, int value)

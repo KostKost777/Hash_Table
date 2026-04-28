@@ -6,6 +6,7 @@
 #include "list_functions.h"
 #include "dump_functions.h"
 #include "set_get_functions.h"
+#include <stdint.h>
 
 const size_t MAX_LEN = 32;
 
@@ -47,7 +48,7 @@ size_t CRC32_HashFunc_SIMD(char* word);
 size_t DJB2_HashFunc(char* word);
 
 extern "C" {
-    int MyStrCmp(const char* str1, const char* str2);
+    int MyStrCmp(const char* str1, const char* str2, uint8_t size);
 }
 
 #endif

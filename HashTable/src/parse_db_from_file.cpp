@@ -21,12 +21,9 @@ void FillBufferFromFile(struct Buffer* buffer, const char* file_name)
     ssize_t file_size = GetSizeOfFile(file_name);
     assert(file_size != -1);
 
-    buffer->size = (size_t)file_size; 
-    buffer->size++;
+    file_size++;
 
-    //printf("SIZE: %llu\n", buffer->size);
-
-    buffer->data = (char*)calloc(buffer->size + 1, sizeof(char));
+    BufferCtor(buffer, (size_t)file_size);
 
     size_t read_symbols = fread(buffer->data, sizeof(char), buffer->size, file);
     buffer->data[buffer->size - 1] = '\0';
@@ -45,11 +42,9 @@ void FillPtrArrayFromBuffer(struct Buffer* buffer, struct PtrArray* ptr_arr)
     assert(buffer);
     assert(ptr_arr);
 
-    ptr_arr->size = CountWordInBuffer(buffer);
+    size_t num_of_word = CountWordInBuffer(buffer);
 
-    //printf("PTR_ARR_SIZE: %llu\n", ptr_arr->size);
-
-    ptr_arr->data = (char**)calloc(ptr_arr->size, sizeof(char*));
+    PtrArrayCtor(ptr_arr, num_of_word);
 
     char* word_begin_ptr = buffer->data;
     size_t ptr_arr_iter = 0;
@@ -145,5 +140,23 @@ void BufferDtor(struct Buffer* buffer)
 
     free(buffer->data);
     buffer->size = 0;
+}
+
+void BufferCtor(struct Buffer* buffer, size_t size)
+{
+    assert(buffer);
+
+    buffer->size = size; 
+
+    buffer->data = (char*)calloc(buffer->size, sizeof(char));
+}
+
+void PtrArrayCtor(struct PtrArray* ptr_arr, size_t size)
+{
+    assert(ptr_arr);
+
+    ptr_arr->size = size;
+
+    ptr_arr->data = (char**)calloc(ptr_arr->size, sizeof(char*));
 }
 

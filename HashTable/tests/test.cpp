@@ -23,6 +23,7 @@ int main(const int argc, const char* argv[]) {
                  i, file_name, bin_file_name, file_name, i, file_name);
         
         system(command);
+        sleep(30);
     }
     return 0;
 }

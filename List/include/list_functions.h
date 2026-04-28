@@ -16,8 +16,8 @@ enum ReturnStatus
 
 struct Data
 {
-    size_t len;
     const char* str;
+    size_t len; 
 };
 
 struct StructList
@@ -25,9 +25,10 @@ struct StructList
     struct Data* data;
     int* next;
     int* prev;
-    int free;
-    int capacity;
+
     int num_of_el;
+    int capacity;
+    int free;
     int err_code;
 };
 

@@ -30,6 +30,8 @@ void BufferDtor(struct Buffer* buffer);
 
 void PtrArrayDtor(struct PtrArray* ptr_arr);
 
+void BufferCtor(struct Buffer* buffer, size_t size);
 
+void PtrArrayCtor(struct PtrArray* ptr_arr, size_t size);
 
 #endif

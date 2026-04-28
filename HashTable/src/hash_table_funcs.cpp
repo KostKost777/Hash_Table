@@ -5,7 +5,7 @@
 #include <immintrin.h>
 #include <stdarg.h>
 #include <errno.h>
-#include <stdint.h>
+#include <stdint.h> 
 
 #include "list_functions.h"
 #include "dump_functions.h"
@@ -61,10 +61,25 @@ void AddElemInHashTable(HashTable* hash_table, char* new_word)
     HASH_TABLE_VERIFIER(hash_table);
     #endif
 
-    size_t hash = hash_table->hash_func(new_word) % hash_table->size;
+    uint64_t reverse_table_size = (uint64_t)((((__uint128_t)1 << 64)) / hash_table->size + 1);
+    size_t hash_value = hash_table->hash_func(new_word);
+    uint64_t quotient = 0;
 
-    if (!IsWordInList(hash_table->table[hash], new_word))
-        InsertAfterTail(hash_table->table[hash], new_word);
+    __asm__ 
+    (
+        ".intel_syntax noprefix\n"
+        "mulx %[hash_value], rcx, rax\n" 
+        ".att_syntax prefix\n"
+        : [quotient] "=a" (quotient) 
+        : [hash_value] "r" (hash_value),
+        "d" (reverse_table_size)
+        : "rcx", "cc"
+    );
+
+    size_t hash_table_index = hash_value - quotient * hash_table->size;
+
+    if (!IsWordInList(hash_table->table[hash_table_index], new_word))
+        InsertAfterTail(hash_table->table[hash_table_index], new_word);
 }
 
 void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
@@ -78,13 +93,13 @@ void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
 bool IsWordInList(struct StructList* list, char* word)
 {
     assert(list);
-    size_t word_len = strlen(word);
-
+    size_t word_len = __builtin_strlen(word);
     int num_of_el = list->num_of_el;
-
+    
     for (int i = 1; i <= num_of_el; ++i)
     {
-        if (!MyStrCmp(list->data[i].str, word))
+        if (word_len == list->data[i].len && 
+            !MyStrCmp(list->data[i].str, word, (uint8_t)word_len))
             return true;
     }
     
