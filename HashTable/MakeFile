@@ -12,7 +12,8 @@ SOURCES_CXX = $(SRC_DIR)/hash_table_main.cpp \
               $(SRC_DIR)/hash_table_funcs.cpp \
               $(SRC_DIR)/hash_table_dump_funcs.cpp \
               $(SRC_DIR)/parse_db_from_file.cpp \
-              $(SRC_DIR)/hash_table_test_funcs.cpp
+              $(SRC_DIR)/hash_table_test_funcs.cpp \
+              $(SRC_DIR)/hash_table_stat_funcs.cpp \
 
 SOURCES_ASM = $(wildcard $(SRC_DIR)/*.asm)
 

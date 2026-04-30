@@ -23,11 +23,11 @@ void HashTableCtor(HashTable* hash_table, size_t size,
 
 void HashTableDtor(HashTable* hash_table);
 
-void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file);
+void WriteHashTableDistribution(struct HashTable* hash_table, char* hash_func_file_name);
 
 void AddElemInHashTable(HashTable* hash_table, char* new_word);
 
-bool IsWordInList(struct StructList* list, char* word);
+bool IsWordInList(struct Data* data, int size, char* word);
 
 size_t AlwaysZeroHashFunc(char* word);
 
@@ -37,9 +37,9 @@ size_t LineLenHashFunc(char* word);
 
 size_t SymbolSumHashFunc(char* word);
 
-size_t LeftShiftHashFunc(char* word);
+size_t ROLHashFunc(char* word);
 
-size_t RightShiftHashFunc(char* word);
+size_t RORHashFunc(char* word);
 
 size_t CRC32_HashFunc(char* word);
 

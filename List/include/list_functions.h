@@ -23,10 +23,9 @@ struct Data
 struct StructList
 {
     struct Data* data;
+    int num_of_el;
     int* next;
     int* prev;
-
-    int num_of_el;
     int capacity;
     int free;
     int err_code;

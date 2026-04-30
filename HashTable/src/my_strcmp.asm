@@ -16,6 +16,9 @@ MyStrCmp:
     cmp      eax, ecx
     sete     al
     movzx    eax, al
+
+    vzeroupper
+    
     ret
 
 section .note.GNU-stack noalloc noexec nowrite progbits

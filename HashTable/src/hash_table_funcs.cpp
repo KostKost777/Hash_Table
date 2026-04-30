@@ -61,46 +61,42 @@ void AddElemInHashTable(HashTable* hash_table, char* new_word)
     HASH_TABLE_VERIFIER(hash_table);
     #endif
 
-    uint64_t reverse_table_size = (uint64_t)((((__uint128_t)1 << 64)) / hash_table->size + 1);
-    size_t hash_value = hash_table->hash_func(new_word);
-    uint64_t quotient = 0;
+    size_t hash_table_index = hash_table->hash_func(new_word) % hash_table->size;
 
-    __asm__ 
-    (
-        ".intel_syntax noprefix\n"
-        "mulx %[hash_value], rcx, rax\n" 
-        ".att_syntax prefix\n"
-        : [quotient] "=a" (quotient) 
-        : [hash_value] "r" (hash_value),
-        "d" (reverse_table_size)
-        : "rcx", "cc"
-    );
-
-    size_t hash_table_index = hash_value - quotient * hash_table->size;
-
-    if (!IsWordInList(hash_table->table[hash_table_index], new_word))
+    if (!IsWordInList(hash_table->table[hash_table_index]->data,
+                      hash_table->table[hash_table_index]->num_of_el,
+                      new_word))
         InsertAfterTail(hash_table->table[hash_table_index], new_word);
 }
 
-void WriteHashTableDistribution(struct HashTable* hash_table, FILE* output_file)
+void WriteHashTableDistribution(struct HashTable* hash_table, char* hash_func_file_name)
 {
     assert(hash_table);
+    assert(hash_func_file_name);
+
+    FILE* output_file = fopen(hash_func_file_name, "w");
+    assert(output_file);
 
     for (size_t i = 0; i < hash_table->size; i++)
         fprintf(output_file, "%d\n", hash_table->table[i]->num_of_el);
+
+    fclose(output_file);
 }
 
-bool IsWordInList(struct StructList* list, char* word)
+bool IsWordInList(struct Data* data, int size, char* word)
 {
-    assert(list);
-    size_t word_len = __builtin_strlen(word);
-    int num_of_el = list->num_of_el;
-    
-    for (int i = 1; i <= num_of_el; ++i)
+    assert(word);
+    assert(data);
+
+    const size_t word_len = strlen(word);
+
+    for (int i = 0; i < size; ++i)
     {
-        if (word_len == list->data[i].len && 
-            !MyStrCmp(list->data[i].str, word, (uint8_t)word_len))
-            return true;
+        if (data[i].len == word_len) 
+        {
+            if (!MyStrCmp(data[i].str, word, word_len))
+                return true;
+        }
     }
     
     return false;
@@ -138,24 +134,28 @@ size_t SymbolSumHashFunc(char* word)
     return hash;
 }
 
-size_t LeftShiftHashFunc(char* word)
-{
+size_t ROLHashFunc(char* word) {
     assert(word);
-
+    
     size_t hash = (size_t)word[0];
-    for (size_t i = 1; word[i] != '\0'; i++)
-        hash = (hash << 1) ^ (size_t)word[i];
+    
+    for (size_t i = 1; word[i] != '\0'; i++) {
+        hash = (hash << 1) | (hash >> 63);
+        hash ^= (size_t)word[i];
+    }
     
     return hash;
 }
 
-size_t RightShiftHashFunc(char* word)
-{
+size_t RORHashFunc(char* word) {
     assert(word);
-
+    
     size_t hash = (size_t)word[0];
-    for (size_t i = 1; word[i] != '\0'; i++)
-        hash = (hash >> 1) ^ (size_t)word[i];
+    
+    for (size_t i = 1; word[i] != '\0'; i++) {
+        hash = (hash >> 1) | (hash << 63);
+        hash ^= (size_t)word[i];
+    }
     
     return hash;
 }
