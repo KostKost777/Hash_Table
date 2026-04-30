@@ -1,8 +1,9 @@
-*.png
 *.html
 *.txt
 *.o
 List/bin
 HashTable/bin
+HashTable/logs/img
+List/logs/img
 *.data
 *.data.old
